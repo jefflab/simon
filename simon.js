@@ -1,6 +1,7 @@
 function onloadHander()
 {             
-  GameManager.start(new Simon());
+  var game = new Simon();
+  game.start();
 };
 
 Simon = function() { 
@@ -10,46 +11,56 @@ Simon = function() {
   this.yellow = document.getElementById( "yellow" );
   this.blue = document.getElementById( "blue" );
   
-  this.levels = [
+  this.sequences = [
     ['g'],
     ['g', 'r'],
     ['g', 'b', 'y', 'y']
   ];
   
-  this.currentlevel = 0;
+  this.currentsequence = 0;                        
   
-  this.nextColor = function() {
-    // return null if no more blinking instructions
-    if( this.currentlevel == this.levels.length - 1 &&
-        this.levels[ this.currentlevel ].length == 0 ) {
-       return null;
+  this.start = function() {        
+    var sequences = this.sequences;   
+        
+    for( var i = 0; i < sequences.length; i++ ) {
+      this.currentsequence = i;
+      var sequence = sequences[ this.currentsequence ];
+      this.playChallenge( sequence );
     }
+  };
     
-    // advance to next level if current level completed
-    if( this.levels[ this.currentlevel ].length == 0 ) {
-      this.currentlevel += 1;
-      return this.nextColor();
+  /* CAPTURE RESPONSE */
+  this.captureResponse = function( sequence ) {
+    alert( 'capture the response here' );
+  };                                 
+        
+  /* PLAY SEQUENCE */
+  this.playChallenge = function( sequence ) {    
+    var next = sequence[0];
+    this.blink( next );
+                       
+    if( sequence.length > 1 ) {
+      var remaining = sequence.slice(1, sequence.length);
+      var _self = this;
+      setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
     }
-         
-    // otherwise return element cooresponding to next instruction
-    var next = this.levels[ this.currentlevel ].shift();
-    if( next == 'g' ) { return this.green; }
-    else if( next == 'r' ) { return this.red; }
-    else if( next == 'y' ) { return this.yellow; }
-    else if( next == 'b' ) { return this.blue; }
-    else { return null; } 
-  };                        
+    else {
+      this.captureResponse( this.currentsequence );
+    }
+  };
   
-  this.blink = function() {          
+  this.blink = function( color ) {
     this.green.setAttribute( 'style', '' ); 
     this.red.setAttribute( 'style', '' ); 
     this.yellow.setAttribute( 'style', '' ); 
     this.blue.setAttribute( 'style', '' );
     
-    var next = this.nextColor();
-    if( next ) {
-      next.setAttribute( 'style', 'background-color: gray' );
-    }
-  };  
+    var next = this.green; // default
+    if( color == 'r' ) { next = this.red; }
+    else if( color == 'y' ) { next = this.yellow; }
+    else if( color == 'b' ) { next = this.blue; }
+    
+    next.setAttribute( 'style', 'background-color: gray' );
+  };                     
                                                               
 }
