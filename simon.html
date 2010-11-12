@@ -7,16 +7,26 @@
 </head>
 
 <body onload="onloadHander();">
-  <table>
-    <tr>
-      <td id="green" width="200" height="200"></td>
-      <td id="red" width="200" height="200"></td>
-    </tr>
-    <tr>
-      <td id="yellow" width="200" height="200"></td>
-      <td id="blue" width="200" height="200"></td>
-    </tr>
-  </table>
+  <div id="simon">
+    <table>
+      <tr>
+        <td id="green" width="200" height="200"></td>
+        <td id="red" width="200" height="200"></td>
+      </tr>
+      <tr>
+        <td id="yellow" width="200" height="200"></td>
+        <td id="blue" width="200" height="200"></td>
+      </tr>
+    </table>
+
+    <div id="winner_dialog" style="display:none">
+      You win
+    </div>
+
+    <div id="loser_dialog" style="display:none">
+      You lose
+    </div>
+  </div>
 </body>
 
 </html>

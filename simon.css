@@ -1,3 +1,5 @@
+/* Simon buttons buttons */
+
 #green
 {
   background-color: green;
@@ -16,4 +18,18 @@
 #blue
 {
   background-color: blue;
+}
+
+/* Winner dialog */
+
+#winner_dialog,
+#loser_dialog
+{
+  position: absolute;
+  left: 50px;
+  top: 50px;
+
+  padding: 10px;
+  background-color: white;
+  border: 1px solid red;
 }

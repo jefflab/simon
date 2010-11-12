@@ -30,14 +30,14 @@ Simon = function() {
     var next = sequence[0];
     this.blink( next );
 
-    if( sequence.length == 0 ) {
-      this.evaluateResponse( this.currentsequence );
-      return;
-    }
-
     var remaining = sequence.slice(1, sequence.length);
-    var _self = this;
-    setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
+    if( remaining.length == 0 ) {
+      this.evaluateResponse( this.currentsequence );
+    }
+    else {
+      var _self = this;
+      setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
+    }
   };
   
   this.blink = function( color ) {
@@ -45,13 +45,16 @@ Simon = function() {
     this.red.attr( 'style', '' );
     this.yellow.attr( 'style', '' );
     this.blue.attr( 'style', '' );
-    
-    var next = this.green; // default
-    if( color == 'r' ) { next = this.red; }
+
+    var next = null;
+    if( color == 'g' ) { next = this.green; }
+    else if( color == 'r' ) { next = this.red; }
     else if( color == 'y' ) { next = this.yellow; }
     else if( color == 'b' ) { next = this.blue; }
     
     next.attr( 'style', 'background-color: gray' );
+
+    setTimeout( function() { next.attr( 'style', '' ); }, 200 );
   };
   
   this.evaluateResponse = function( sequence ) {
@@ -64,7 +67,7 @@ Simon = function() {
 
   this.handleClick = function( color ) {
     if( color != this.currentsequence[0] ){
-      this.gameOver();
+      this.lose();
       return;
     }
 
@@ -77,16 +80,20 @@ Simon = function() {
   };
 
   this.win = function() {
-    alert( 'you win' );
+    this.stopGame();
+    $('#winner_dialog').show();
   };
 
-  this.gameOver = function() {
+  this.lose = function() {
+    this.stopGame();
+    $('#loser_dialog').show();
+  };
+
+  this.stopGame = function() {
     this.green.unbind( 'click' );
     this.red.unbind( 'click' );
     this.yellow.unbind( 'click' );
     this.blue.unbind( 'click' );
-    
-    alert( 'gameover stuff' );
   };
                                                               
 }
