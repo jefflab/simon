@@ -24,9 +24,7 @@ Simon = function() {
       this.currentsequence = sequences[ i ];
       this.playChallenge( this.currentsequence );
     }
-  };                               
-        
-  /* PLAY CHALLENGE SEQUENCE */
+  };  
   
   this.playChallenge = function( sequence ) {    
     var next = sequence[0];
