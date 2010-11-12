@@ -4,63 +4,91 @@ function onloadHander()
   game.start();
 };
 
-Simon = function() { 
+Simon = function() {
          
-  this.green = document.getElementById( "green" );
-  this.red = document.getElementById( "red" );
-  this.yellow = document.getElementById( "yellow" );
-  this.blue = document.getElementById( "blue" );
+  this.green = $( "#green" );
+  this.red = $( "#red" );
+  this.yellow = $( "#yellow" );
+  this.blue = $( "#blue" );
   
   this.sequences = [
-    ['g'],
-    ['g', 'r'],
     ['g', 'b', 'y', 'y']
   ];
-  
-  this.currentsequence = 0;                        
+
+  this.currentsequence = null;
   
   this.start = function() {        
-    var sequences = this.sequences;   
-        
+    var sequences = this.sequences;
+
     for( var i = 0; i < sequences.length; i++ ) {
-      this.currentsequence = i;
-      var sequence = sequences[ this.currentsequence ];
-      this.playChallenge( sequence );
+      this.currentsequence = sequences[ i ];
+      this.playChallenge( this.currentsequence );
     }
-  };
-    
-  /* CAPTURE RESPONSE */
-  this.captureResponse = function( sequence ) {
-    alert( 'capture the response here' );
-  };                                 
+  };                               
         
-  /* PLAY SEQUENCE */
+  /* PLAY CHALLENGE SEQUENCE */
+  
   this.playChallenge = function( sequence ) {    
     var next = sequence[0];
     this.blink( next );
-                       
-    if( sequence.length > 1 ) {
-      var remaining = sequence.slice(1, sequence.length);
-      var _self = this;
-      setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
+
+    if( sequence.length == 0 ) {
+      this.evaluateResponse( this.currentsequence );
+      return;
     }
-    else {
-      this.captureResponse( this.currentsequence );
-    }
+
+    var remaining = sequence.slice(1, sequence.length);
+    var _self = this;
+    setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
   };
   
   this.blink = function( color ) {
-    this.green.setAttribute( 'style', '' ); 
-    this.red.setAttribute( 'style', '' ); 
-    this.yellow.setAttribute( 'style', '' ); 
-    this.blue.setAttribute( 'style', '' );
+    this.green.attr( 'style', '' );
+    this.red.attr( 'style', '' );
+    this.yellow.attr( 'style', '' );
+    this.blue.attr( 'style', '' );
     
     var next = this.green; // default
     if( color == 'r' ) { next = this.red; }
     else if( color == 'y' ) { next = this.yellow; }
     else if( color == 'b' ) { next = this.blue; }
     
-    next.setAttribute( 'style', 'background-color: gray' );
-  };                     
+    next.attr( 'style', 'background-color: gray' );
+  };
+  
+  this.evaluateResponse = function( sequence ) {
+    var _this = this;
+    this.green.click( function(){ _this.handleClick( 'g' ) } );
+    this.red.click( function(){ _this.handleClick( 'r' ) } );
+    this.yellow.click( function(){ _this.handleClick( 'y' ) } );
+    this.blue.click( function(){ _this.handleClick( 'b' ) } );
+  };
+
+  this.handleClick = function( color ) {
+    if( color != this.currentsequence[0] ){
+      this.gameOver();
+      return;
+    }
+
+    this.currentsequence.shift();
+
+    if( this.currentsequence.length == 0 ) {
+      this.win();
+      return;
+    }
+  };
+
+  this.win = function() {
+    alert( 'you win' );
+  };
+
+  this.gameOver = function() {
+    this.green.unbind( 'click' );
+    this.red.unbind( 'click' );
+    this.yellow.unbind( 'click' );
+    this.blue.unbind( 'click' );
+    
+    alert( 'gameover stuff' );
+  };
                                                               
 }
