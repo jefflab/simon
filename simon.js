@@ -1,8 +1,8 @@
+var simon = new Simon();
+
 function onloadHander()
-{             
-  var game = new Simon();
-  game.init();
-  game.start();
+{       
+  simon.start();
 };
 
 Simon = function() {
@@ -14,12 +14,9 @@ Simon = function() {
   
   this.sequences = null;
   this.currentsequence = null;
-
-  this.init = function() {
-    this.sequences = Simon.Settings.sequences;
-  };
   
   this.start = function() {
+    this.sequences = Simon.Settings.sequences;
     this.playNextSequence();
   };
 
