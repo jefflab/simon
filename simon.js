@@ -12,19 +12,25 @@ Simon = function() {
   this.blue = $( "#blue" );
   
   this.sequences = [
-    ['g', 'b', 'y', 'y']
+    ['g', 'b', 'y', 'y'],
+    ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
   ];
 
   this.currentsequence = null;
   
-  this.start = function() {        
-    var sequences = this.sequences;
+  this.start = function() {
+    this.playNextSequence();
+  };
 
-    for( var i = 0; i < sequences.length; i++ ) {
-      this.currentsequence = sequences[ i ];
-      this.playChallenge( this.currentsequence );
+  this.playNextSequence = function() {
+    $( '#loser_dialog' ).hide();
+    $( '#winner_dialog' ).hide();
+
+    if( this.sequences.length > 0 ) {
+      this.currentsequence = this.sequences.shift();
+      this.playChallenge( this.currentsequence ); 
     }
-  };  
+  };
   
   this.playChallenge = function( sequence ) {    
     var next = sequence[0];
@@ -62,7 +68,7 @@ Simon = function() {
     this.green.click( function(){ _this.handleClick( 'g' ) } );
     this.red.click( function(){ _this.handleClick( 'r' ) } );
     this.yellow.click( function(){ _this.handleClick( 'y' ) } );
-    this.blue.click( function(){ _this.handleClick( 'b' ) } );
+    this.blue.click( function() { _this.handleClick('b') } );
   };
 
   this.handleClick = function( color ) {
@@ -75,13 +81,15 @@ Simon = function() {
 
     if( this.currentsequence.length == 0 ) {
       this.win();
-      return;
     }
   };
 
   this.win = function() {
     this.stopGame();
     $('#winner_dialog').show();
+
+    var _this = this;
+    setTimeout( function() { _this.playNextSequence(); }, 1000 );
   };
 
   this.lose = function() {
