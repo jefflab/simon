@@ -1,6 +1,7 @@
 function onloadHander()
 {             
   var game = new Simon();
+  game.init();
   game.start();
 };
 
@@ -11,12 +12,12 @@ Simon = function() {
   this.yellow = $( "#yellow" );
   this.blue = $( "#blue" );
   
-  this.sequences = [
-    ['g', 'b', 'y', 'y'],
-    ['r', 'r']
-  ];
-
+  this.sequences = null;
   this.currentsequence = null;
+
+  this.init = function() {
+    this.sequences = Simon.Settings.sequences;
+  };
   
   this.start = function() {
     this.playNextSequence();
@@ -105,6 +106,12 @@ Simon = function() {
     this.red.unbind( 'click' );
     this.yellow.unbind( 'click' );
     this.blue.unbind( 'click' );
-  };
-                                                              
-}
+  };                                                            
+};
+
+Simon.Settings = {
+  sequences: [
+    ['g', 'b', 'y', 'y'],
+    ['r', 'r']
+  ]
+};
