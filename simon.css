@@ -22,8 +22,7 @@
 
 /* Winner dialog */
 
-#winner_dialog,
-#loser_dialog
+.dialog
 {
   position: absolute;
   left: 50px;

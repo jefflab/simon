@@ -13,7 +13,7 @@ Simon = function() {
   
   this.sequences = [
     ['g', 'b', 'y', 'y'],
-    ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    ['r', 'r']
   ];
 
   this.currentsequence = null;
@@ -26,10 +26,8 @@ Simon = function() {
     $( '#loser_dialog' ).hide();
     $( '#winner_dialog' ).hide();
 
-    if( this.sequences.length > 0 ) {
-      this.currentsequence = this.sequences.shift();
-      this.playChallenge( this.currentsequence ); 
-    }
+    this.currentsequence = this.sequences.shift();
+    this.playChallenge( this.currentsequence );
   };
   
   this.playChallenge = function( sequence ) {    
@@ -88,8 +86,13 @@ Simon = function() {
     this.stopGame();
     $('#winner_dialog').show();
 
-    var _this = this;
-    setTimeout( function() { _this.playNextSequence(); }, 1000 );
+    if( this.sequences.length > 0 ) {
+      var _this = this;
+      setTimeout( function() { _this.playNextSequence(); }, 1000 );
+    }
+    else {
+      $('#gameover_dialog').show(); 
+    }
   };
 
   this.lose = function() {
