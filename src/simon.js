@@ -7,6 +7,8 @@ function onloadHander()
 };
 
 Simon = function() {
+
+  this.ui = new Simon.UI();
          
   this.green = $( "#green" );
   this.red = $( "#red" );
@@ -17,7 +19,7 @@ Simon = function() {
   this.currentsequence = null;
   
   this.start = function() {
-    $('#gameover_dialog').hide();
+    this.ui.hideGameoverDialog();
     this.loadSequence();
     this.playNextSequence();
   };
@@ -27,8 +29,8 @@ Simon = function() {
   };
 
   this.playNextSequence = function() {
-    $( '#loser_dialog' ).hide();
-    $( '#winner_dialog' ).hide();
+    this.ui.hideLoserDialog();
+    this.ui.hideWinnerDialog();
 
     this.currentsequence = this.sequences.shift();
     this.playChallenge( this.currentsequence );
@@ -47,19 +49,16 @@ Simon = function() {
       setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
     }
   };
-  
+
   this.blink = function( color ) {
-    this.green.attr( 'style', '' );
-    this.red.attr( 'style', '' );
-    this.yellow.attr( 'style', '' );
-    this.blue.attr( 'style', '' );
+    this.ui.resetButtonColors();
 
     var next = null;
     if( color == 'g' ) { next = this.green; }
     else if( color == 'r' ) { next = this.red; }
     else if( color == 'y' ) { next = this.yellow; }
     else if( color == 'b' ) { next = this.blue; }
-    
+
     next.attr( 'style', 'background-color: gray' );
 
     setTimeout( function() { next.attr( 'style', '' ); }, 200 );
@@ -88,29 +87,30 @@ Simon = function() {
 
   this.win = function() {
     this.stopGame();
-    $('#winner_dialog').show();
+    this.ui.showWinnerDialog();
 
     if( this.sequences.length > 0 ) {
       var _this = this;
       setTimeout( function() { _this.playNextSequence(); }, 1000 );
     }
     else {
-      $('#gameover_dialog').show(); 
+      this.ui.showGameoverDialog();
     }
   };
 
   this.lose = function() {
     this.stopGame();
-    $('#loser_dialog').show();
+    this.ui.showLoserDialog();
   };
 
   this.stopGame = function() {
-    this.green.unbind( 'click' );
-    this.red.unbind( 'click' );
-    this.yellow.unbind( 'click' );
-    this.blue.unbind( 'click' );
+    this.ui.disableColorButtons();
   };                                                            
 };
+
+/***********************************************************************
+ * Simon.Settings
+ **********************************************************************/
 
 Simon.Settings = {
   sequences: [
@@ -118,3 +118,57 @@ Simon.Settings = {
     ['r', 'r']
   ]
 };
+
+/***********************************************************************
+ * Simon.UI
+ **********************************************************************/
+
+Simon.UI = function() {
+  this.green = $( "#green" );
+  this.red = $( "#red" );
+  this.yellow = $( "#yellow" );
+  this.blue = $( "#blue" );  
+  this.winner_dialog = $('#winner_dialog');
+  this.loser_dialog = $('#loser_dialog');
+  this.gameover_dialg = $('#gameover_dialog');
+}
+
+Simon.UI.prototype = {
+  disableColorButtons: function() {
+    this.green.unbind( 'click' );
+    this.red.unbind( 'click' );
+    this.yellow.unbind( 'click' );
+    this.blue.unbind( 'click' );
+  },
+
+  resetButtonColors: function() {
+    this.green.attr( 'style', '' );
+    this.red.attr( 'style', '' );
+    this.yellow.attr( 'style', '' );
+    this.blue.attr( 'style', '' );
+  },
+
+  showLoserDialog: function() {
+    $('#loser_dialog').show();
+  },
+
+  hideLoserDialog: function() {
+    $( '#loser_dialog' ).hide();
+  },
+
+  showGameoverDialog: function() {
+    $('#gameover_dialog').show();
+  },
+
+  hideGameoverDialog: function() {
+    $('#gameover_dialog').hide();
+  },
+
+  showWinnerDialog: function() {
+    $('#winner_dialog').show();
+  },
+
+  hideWinnerDialog: function() {
+    $( '#winner_dialog' ).hide();
+  }
+}
