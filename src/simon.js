@@ -9,11 +9,6 @@ function onloadHander()
 Simon = function() {
 
   this.ui = new Simon.UI();
-         
-  this.green = $( "#green" );
-  this.red = $( "#red" );
-  this.yellow = $( "#yellow" );
-  this.blue = $( "#blue" );
   
   this.sequences = null;
   this.currentsequence = null;
@@ -38,7 +33,7 @@ Simon = function() {
   
   this.playChallenge = function( sequence ) {    
     var next = sequence[0];
-    this.blink( next );
+    this.ui.blink( next );
 
     var remaining = sequence.slice(1, sequence.length);
     if( remaining.length == 0 ) {
@@ -49,27 +44,9 @@ Simon = function() {
       setTimeout( function() { _self.playChallenge( remaining ); }, 1000 );
     }
   };
-
-  this.blink = function( color ) {
-    this.ui.resetButtonColors();
-
-    var next = null;
-    if( color == 'g' ) { next = this.green; }
-    else if( color == 'r' ) { next = this.red; }
-    else if( color == 'y' ) { next = this.yellow; }
-    else if( color == 'b' ) { next = this.blue; }
-
-    next.attr( 'style', 'background-color: gray' );
-
-    setTimeout( function() { next.attr( 'style', '' ); }, 200 );
-  };
   
   this.evaluateResponse = function( sequence ) {
-    var _this = this;
-    this.green.click( function(){ _this.handleClick( 'g' ) } );
-    this.red.click( function(){ _this.handleClick( 'r' ) } );
-    this.yellow.click( function(){ _this.handleClick( 'y' ) } );
-    this.blue.click( function() { _this.handleClick('b') } );
+    this.ui.enableButtons();
   };
 
   this.handleClick = function( color ) {
@@ -104,7 +81,7 @@ Simon = function() {
   };
 
   this.stopGame = function() {
-    this.ui.disableColorButtons();
+    this.ui.disableButtons();
   };                                                            
 };
 
@@ -134,12 +111,6 @@ Simon.UI = function() {
 }
 
 Simon.UI.prototype = {
-  disableColorButtons: function() {
-    this.green.unbind( 'click' );
-    this.red.unbind( 'click' );
-    this.yellow.unbind( 'click' );
-    this.blue.unbind( 'click' );
-  },
 
   resetButtonColors: function() {
     this.green.attr( 'style', '' );
@@ -147,6 +118,38 @@ Simon.UI.prototype = {
     this.yellow.attr( 'style', '' );
     this.blue.attr( 'style', '' );
   },
+
+  blink: function( color ) {
+    this.resetButtonColors();
+
+    var next = null;
+    if( color == 'g' ) { next = this.green; }
+    else if( color == 'r' ) { next = this.red; }
+    else if( color == 'y' ) { next = this.yellow; }
+    else if( color == 'b' ) { next = this.blue; }
+
+    next.attr( 'style', 'background-color: gray' );
+
+    setTimeout( function() { next.attr( 'style', '' ); }, 200 );
+  },
+
+  enableButtons: function() {
+    this.green.click( function(){ simon.handleClick( 'g' ) } );
+    this.red.click( function(){ simon.handleClick( 'r' ) } );
+    this.yellow.click( function(){ simon.handleClick( 'y' ) } );
+    this.blue.click( function() { simon.handleClick('b') } );
+  },
+
+  disableButtons: function() {
+    this.green.unbind( 'click' );
+    this.red.unbind( 'click' );
+    this.yellow.unbind( 'click' );
+    this.blue.unbind( 'click' );
+  },
+
+  /****************************************************************************
+   * Dialogs
+   ***************************************************************************/
 
   showLoserDialog: function() {
     $('#loser_dialog').show();
