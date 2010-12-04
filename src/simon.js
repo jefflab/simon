@@ -3,7 +3,7 @@ var simon = null;
 function onloadHander()
 {
   simon = new Simon();
-  simon.start();
+  simon.init();
 };
 
 Simon = function() {
@@ -12,10 +12,15 @@ Simon = function() {
   
   this.sequences = null;
   this.currentsequence = null;
-  
-  this.start = function() {
+
+  this.init = function() {
     this.ui.hideGameoverDialog();
     this.loadSequence();
+    this.ui.showStartDialog();
+  };
+  
+  this.start = function() {
+    this.ui.hideStartDialog();
     this.playNextSequence();
   };
 
@@ -82,7 +87,7 @@ Simon = function() {
 
   this.stopGame = function() {
     this.ui.disableButtons();
-  };                                                            
+  };
 };
 
 /***********************************************************************
@@ -150,6 +155,14 @@ Simon.UI.prototype = {
   /****************************************************************************
    * Dialogs
    ***************************************************************************/
+
+  showStartDialog: function() {
+    $('#start_dialog').show();
+  },
+
+  hideStartDialog: function() {
+    $('#start_dialog').hide();
+  },
 
   showLoserDialog: function() {
     $('#loser_dialog').show();
