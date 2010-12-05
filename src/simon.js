@@ -3,7 +3,6 @@ var simon = null;
 function onloadHander()
 {
   simon = new Simon();
-  simon.init();
 };
 
 Simon = function() {
@@ -12,15 +11,11 @@ Simon = function() {
   
   this.sequences = null;
   this.currentsequence = null;
-
-  this.init = function() {
-    this.ui.hideGameoverDialog();
-    this.loadSequence();
-    this.ui.showStartDialog();
-  };
   
   this.start = function() {
+    this.loadSequence();
     this.ui.hideStartDialog();
+    this.ui.hideGameoverDialog();
     this.playNextSequence();
   };
 
@@ -97,7 +92,8 @@ Simon = function() {
 Simon.Settings = {
   sequences: [
     ['g', 'b', 'y', 'y'],
-    ['r', 'r']
+    ['r', 'r'],
+    ['g','y','b','r','g','g']
   ]
 };
 
